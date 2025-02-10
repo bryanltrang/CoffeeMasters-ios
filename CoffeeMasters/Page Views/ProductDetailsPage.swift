@@ -9,30 +9,36 @@ import SwiftUI
 
 struct ProductDetailsPage: View {
     @State var quantity = 1
+    var product: Product
+    @EnvironmentObject var cartManager: CartManager
     
     var body: some View {
         ScrollView {
-            Image("DummyImage")
+            AsyncImage(url: product.imageUrl)
                 .cornerRadius(5)
                 .frame(maxWidth: .infinity, idealHeight: 150, maxHeight: 150)
                 .padding(.top, 32)
-            Text("Product")
+            Text(product.name)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.leading)
                 .padding(24)
+            Text(product.description ?? "")
+                .frame(maxWidth: .infinity)
+                .multilineTextAlignment(.leading)
+                .foregroundColor(Color("Primary"))
             HStack {
-                Text("$ 4.25 ea")
+                Text("$ \(product.price, specifier: "%.2f") ea")
                 Stepper(value: $quantity, in: 1...10) { }
             }
                 .frame(maxWidth: .infinity)
                 .padding(30)
                             
-            Text("Subtotal $4.25")
+            Text("Subtotal $\(Double(quantity) * product.price, specifier: "%.2f")")
                 .bold()
                 .padding(12)
             
             Button("Add \(quantity) to Cart") {
-                //TODO
+                cartManager.add(product: product, quantity: quantity)
             }
                 .padding()
                 .frame(width: 250.0)
@@ -41,10 +47,10 @@ struct ProductDetailsPage: View {
                 .cornerRadius(25)
 
         }
-            .navigationTitle("DummyName")
+        .navigationTitle(product.name)
     }
 }
 
 #Preview {
-    ProductDetailsPage()
+    ProductDetailsPage(product: Product(id: 1, name: "Dummy", description: " test description", price: 10.45, image: "")).environmentObject(CartManager())
 }
