@@ -21,4 +21,10 @@ class CartManager: ObservableObject {
         }
     }
     
+    func total() -> Double {
+        return self.cart.reduce(0) { total, item in
+            return total + Double(item.1) * item.0.price
+        }
+    }
+    
 }

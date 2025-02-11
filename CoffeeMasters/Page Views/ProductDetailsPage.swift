@@ -10,7 +10,9 @@ import SwiftUI
 struct ProductDetailsPage: View {
     @State var quantity = 1
     var product: Product
+    
     @EnvironmentObject var cartManager: CartManager
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ScrollView {
@@ -39,6 +41,7 @@ struct ProductDetailsPage: View {
             
             Button("Add \(quantity) to Cart") {
                 cartManager.add(product: product, quantity: quantity)
+                dismiss()
             }
                 .padding()
                 .frame(width: 250.0)
